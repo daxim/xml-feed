@@ -36,6 +36,7 @@ sub parse {
     return $class->error("Stream parameter is required") unless $stream;
     my $feed = bless {}, $class;
     my $xml = '';
+    my $uri;
     if (UNIVERSAL::isa($stream, 'URI')) {
         my $ua  = LWP::UserAgent->new;
         $ua->env_proxy; # force allowing of proxies
@@ -44,6 +45,7 @@ sub parse {
         return $class->error("This feed has been permanently removed")
             if $res->status == URI::Fetch::URI_GONE();
         $xml = $res->content;
+        $uri = $res->uri->as_string;
     } elsif (ref($stream) eq 'SCALAR') {
         $xml = $$stream;
     } elsif (ref($stream)) {
@@ -71,7 +73,7 @@ sub parse {
     eval "use $format_class";
     return $class->error("Unsupported format $format: $@") if $@;
     bless $feed, $format_class;
-    $feed->init_string(\$xml) or return $class->error($feed->errstr);
+    $feed->init_string(\$xml, $uri) or return $class->error($feed->errstr);
     $feed;
 }
 

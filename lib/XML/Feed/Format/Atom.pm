@@ -34,9 +34,9 @@ sub init_empty {
 
 sub init_string {
     my $feed = shift;
-    my($str) = @_;
+    my ($str, $uri) = @_;
     if ($str) {
-        $feed->{atom} = XML::Atom::Feed->new(Stream => $str)
+        $feed->{atom} = XML::Atom::Feed->new(Stream => $str, URI => $uri)
             or return $feed->error(XML::Atom::Feed->errstr);
     }
     $feed;

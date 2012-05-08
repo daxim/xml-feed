@@ -27,7 +27,7 @@ sub link {
                                     type => 'text/html', });
     } else {
         my $l = first { !defined $_->rel || $_->rel eq 'alternate' } $entry->{entry}->link;
-        $l ? $l->href : undef;
+        $l ? $l->uri : undef;
     }
 }
 
